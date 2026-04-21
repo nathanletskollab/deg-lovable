@@ -1,14 +1,13 @@
 import { motion } from 'framer-motion'
-import heroPortrait from '@/assets/hero-portrait.png'
-import { ChevronRight } from 'lucide-react'
+import heroPortrait from '@/assets/hero-portrait.png?format=webp&as=url'
 
 const AboutSection = () => {
   return (
     <section
       id="about"
       data-navbar-theme="dark"
-      className="section-layer section-layer--overlap section-layer--has-overlap relative z-[6] overflow-hidden py-20 md:py-32"
-      style={{ background: '#FAF6ED' }}
+      className="section-layer section-layer--overlap section-layer--has-overlap relative z-[6] overflow-hidden pt-20 md:pt-32 pb-36 md:pb-52"
+      style={{ background: 'hsl(var(--background))' }}
     >
       <div className="container relative z-10">
         <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-center">
@@ -29,6 +28,8 @@ const AboutSection = () => {
                 src={heroPortrait}
                 alt="Dr. Erica Grenci"
                 className="w-full h-full object-cover object-top"
+                width={778}
+                height={780}
                 loading="lazy"
               />
             </div>
@@ -42,14 +43,14 @@ const AboutSection = () => {
             transition={{ duration: 0.8, delay: 0.1 }}
           >
             <p className="type-eyebrow mb-5">About Dr. Erica</p>
-            <h2 className="font-serif leading-[1.1] font-normal text-foreground mb-8"
+            <h2 className="type-display text-foreground mb-8 leading-[1.1]"
               style={{ fontSize: 'clamp(2rem, 4vw, 3.25rem)', letterSpacing: '-0.02em' }}
             >
               Meet Dr.&nbsp;Erica Grenci and the Philosophy Behind Her{' '}
               <em>Care</em>
             </h2>
 
-            <div className="space-y-4 font-sans leading-[1.6] text-[#242321]" style={{ fontSize: '1rem' }}>
+            <div className="space-y-4 type-body leading-[1.6] text-foreground">
               <p>
                 I'm a board-certified naturopathic doctor and mother of two. My work blends <strong>modern assessment</strong> with a strong foundation in <strong>herbal medicine</strong> — something I practice every day with my own family and in my clinical work.
               </p>
@@ -66,11 +67,13 @@ const AboutSection = () => {
 
             <a
               href="#approach"
-              className="inline-flex items-center gap-2 mt-10 px-7 py-4 rounded-full font-sans text-sm font-semibold transition-colors"
-              style={{ background: '#1F3931', color: '#fff' }}
+              className="inline-flex items-center gap-2 h-10 mt-10 px-6 rounded-full font-sans text-sm leading-none font-medium tracking-wide transition-colors"
+              style={{ background: 'hsl(var(--primary))', color: 'hsl(var(--primary-foreground))' }}
             >
               Read Erica's Story & Philosophy
-              <ChevronRight className="h-4 w-4" />
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             </a>
           </motion.div>
         </div>

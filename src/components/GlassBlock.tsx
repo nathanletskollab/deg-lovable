@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion'
 import { useIsMobile } from '@/hooks/use-mobile'
 import './GlassBlock.css'
-import ericaPhoto from '@/assets/hero-portrait.png'
-import sectionBg from '@/assets/section1_background.png'
+import ericaPhoto from '@/assets/hero-portrait.png?format=webp&as=url'
+import sectionBg from '@/assets/section1_background.png?format=webp&as=url'
 import arrowDark from '@/assets/imgArrowRight1.svg'
 import arrowLight from '@/assets/imgArrowRight.svg'
 import iconEarlyYears from '@/assets/icons/EarlyYears.svg'
@@ -101,9 +101,9 @@ export default function GlassBlock() {
     <section data-navbar-theme="dark" className="glass-block">
       <img src={sectionBg} alt="" aria-hidden="true" className="glass-block-bg-img" />
       <div className="glass-block-inner">
-        <h1 className="glass-heading">
+        <h2 className="glass-heading">
           Hello, <strong className="font-serif">I'm Dr. Erica</strong>.
-        </h1>
+        </h2>
         <p className="glass-subheading whitespace-pre-line">
           I help moms and families move beyond quick fixes{'\n'}— to find real, lasting health from within.
         </p>

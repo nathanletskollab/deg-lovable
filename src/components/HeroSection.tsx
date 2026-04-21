@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import heroPortrait from '@/assets/hero-portrait.jpg'
+import heroPortrait from '@/assets/hero-portrait.jpg?format=webp&as=url'
 import naturopathySvg from '@/assets/naturopathy-herbal-medicine.svg'
 
 const HeroSection = () => {
@@ -11,6 +11,9 @@ const HeroSection = () => {
           src={heroPortrait}
           alt="Dr. Erica Grenci, Naturopathic Doctor"
           className="w-full h-full object-cover object-[center_15%]"
+          width={1440}
+          height={1920}
+          fetchPriority="high"
           style={{
             filter: 'contrast(0.95) saturate(0.88) brightness(1.04)',
           }}
@@ -43,7 +46,7 @@ const HeroSection = () => {
 
       {/* Text content — bottom-left */}
       <div className="relative z-10 min-h-screen flex items-end">
-        <div className="container pb-16 md:pb-48 lg:pb-52 pt-32">
+        <div className="w-full pb-16 md:pb-48 lg:pb-52 pt-32 px-6 sm:px-10 md:px-14 lg:px-20 xl:px-[5rem] max-w-screen-2xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -73,10 +76,7 @@ const HeroSection = () => {
               />
             </motion.div>
 
-            <p
-              className="type-body max-w-[24rem] mt-4"
-              style={{ color: '#FFFFFF', opacity: 1 }}
-            >
+            <p className="type-body max-w-[24rem] mt-4 text-white/95">
               Toronto-based naturopathic care for women and families seeking a
               more thoughtful, long-term approach to their health.
             </p>
@@ -89,7 +89,7 @@ const HeroSection = () => {
             >
               <a
                 href="https://drericagrenci.janeapp.com/"
-                className="inline-flex items-center gap-2 px-7 py-4 rounded-full bg-white/95 text-foreground font-sans text-sm font-semibold hover:bg-white shadow-lg hover:shadow-xl transition-all backdrop-blur-sm"
+                className="inline-flex items-center gap-2 h-10 px-6 rounded-full bg-white/95 text-foreground font-sans text-sm leading-none font-medium tracking-wide hover:bg-white shadow-lg hover:shadow-xl transition-all backdrop-blur-sm"
               >
                 Start with Dr. Erica
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="ml-1">

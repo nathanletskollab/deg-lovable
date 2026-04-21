@@ -70,8 +70,10 @@ const FAQSection = () => {
                   <button
                     onClick={() => setOpenIndex(isOpen ? null : i)}
                     className="w-full flex items-center justify-between text-left group min-h-[52px] md:min-h-[60px] px-4 py-3 md:px-6 md:py-4"
+                    aria-expanded={isOpen}
+                    aria-controls={`faq-answer-${i}`}
                   >
-                    <span className="font-sans font-medium text-[#242321] pr-4 leading-[1.4] text-[15px] md:text-base">
+                    <span className="font-sans font-medium text-foreground pr-4 leading-[1.4] text-base">
                       {faq.q}
                     </span>
                     <span
@@ -84,13 +86,15 @@ const FAQSection = () => {
                     </span>
                   </button>
                   <div
+                    id={`faq-answer-${i}`}
+                    role="region"
                     className="overflow-hidden transition-all duration-300"
                     style={{
                       maxHeight: isOpen ? '300px' : '0px',
                       opacity: isOpen ? 1 : 0,
                     }}
                   >
-                    <p className="px-4 md:px-6 pb-4 md:pb-5 pt-0 font-sans text-[15px] md:text-base leading-[1.6] text-[#242321]/75">
+                    <p className="px-4 md:px-6 pb-4 md:pb-5 pt-0 font-sans text-base leading-[1.6] text-foreground/75">
                       {faq.a}
                     </p>
                   </div>

@@ -1,8 +1,8 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
-import step1Img from '@/assets/step-1.png'
-import step2Img from '@/assets/step-2.png'
-import step3Img from '@/assets/step-3.png'
+import step1Img from '@/assets/step-1.png?format=webp&as=url'
+import step2Img from '@/assets/step-2.png?format=webp&as=url'
+import step3Img from '@/assets/step-3.png?format=webp&as=url'
 
 const steps = [
   {
@@ -77,22 +77,22 @@ const TimelineStep = ({
 
     <p className="type-serif-italic text-foreground/50 mb-6">{step.subline}</p>
 
-    <p className="type-body-md text-foreground/75 mb-4 max-w-2xl">{step.body}</p>
+    <p className="type-body text-foreground/75 mb-4 max-w-2xl">{step.body}</p>
     {step.supporting && (
-      <p className="type-body-md text-foreground/55 mb-4 max-w-2xl">
+      <p className="type-body text-foreground/55 mb-4 max-w-2xl">
         {step.supporting}
       </p>
     )}
 
-    <p className="type-body-sm italic text-foreground/40 mb-6 pl-4 max-w-xl" style={{ borderLeft: '2px solid hsl(var(--foreground) / 0.10)' }}>
-      {step.moment}
+    <p className="type-body-sm italic text-foreground/35 mb-6 max-w-sm">
+      — {step.moment}
     </p>
 
     <div className="flex flex-wrap gap-2">
       {step.tags.map((tag) => (
         <span
           key={tag}
-          className="inline-block font-serif type-body md:type-body-sm px-3 py-1 bg-[#fdf9ed]"
+          className="inline-block type-body-sm px-3 py-1 bg-background"
           style={{ borderRadius: '60px', border: '2px solid rgba(196, 183, 165, 0.80)' }}
         >
           {tag}
@@ -168,8 +168,6 @@ const ApproachSection = () => {
 
   useEffect(() => {
     measureDots()
-    window.addEventListener('scroll', measureDots, { passive: true })
-    return () => window.removeEventListener('scroll', measureDots)
   }, [measureDots])
 
   const firstDot = dotTops[0] ?? 0
@@ -182,7 +180,7 @@ const ApproachSection = () => {
       id="approach"
       data-navbar-theme="dark"
       className="section-layer section-layer--has-overlap section-texture-grain relative z-[5] -mt-[100px] md:-mt-[140px] rounded-t-[var(--section-radius)]"
-      style={{ backgroundColor: '#FAF6ED' }}
+      style={{ backgroundColor: 'hsl(var(--background))' }}
     >
       {/* Intro */}
       <div className="container max-w-5xl mx-auto relative z-10 text-center pt-12 md:pt-36 mb-12 md:mb-20">
@@ -197,7 +195,7 @@ const ApproachSection = () => {
             You may have never had the space to{' '}
             <strong className="font-medium">tell your full story</strong>.
           </h2>
-          <p className="type-body-md text-foreground/60 max-w-2xl mx-auto">
+          <p className="type-body text-foreground/60 max-w-2xl mx-auto">
             I take the time to understand your history, your patterns, and the
             signals your body has been sending — so nothing important gets
             overlooked.
@@ -216,6 +214,9 @@ const ApproachSection = () => {
                 src={step.image}
                 alt=""
                 className="absolute inset-0 w-full h-full object-contain object-right transition-opacity duration-700"
+                width={1033}
+                height={1536}
+                loading="lazy"
                 style={{
                   opacity: activeStep === i ? 0.45 : 0,
                 }}
@@ -297,7 +298,7 @@ const ApproachSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
           transition={{ duration: 0.7 }}
-          className="text-center pt-14 md:pt-20 pb-12 md:pb-36"
+          className="text-center pt-24 md:pt-32 pb-24 md:pb-48"
         >
           <p className="type-serif-quote text-foreground/60 mb-1">
             This is not a one-time<br className="md:hidden" /> approach to health.

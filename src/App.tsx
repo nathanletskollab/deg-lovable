@@ -1,26 +1,15 @@
+import { Routes, Route } from 'react-router-dom'
 import './index.css'
-import Navbar from './components/Navbar'
-import HeroSection from './components/HeroSection'
-import GlassBlock from './components/GlassBlock'
-import QuoteVideoSection from './components/QuoteVideoSection'
-import ApproachSection from './components/ApproachSection'
-import AboutSection from './components/AboutSection'
-import FAQSection from './components/FAQSection'
-import BeyondSection from './components/BeyondSection'
-import FooterDeg2025 from './components/FooterDeg2025'
+import HomePage from './pages/HomePage'
+import StartYourCarePage from './pages/StartYourCarePage'
+import ContinueYourCarePage from './pages/ContinueYourCarePage'
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <HeroSection />
-      <GlassBlock />
-      <QuoteVideoSection />
-      <ApproachSection />
-      <AboutSection />
-      <FAQSection />
-      <BeyondSection />
-      <FooterDeg2025 />
-    </div>
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/start-your-care" element={<StartYourCarePage />} />
+      <Route path="/continue-your-care" element={<ContinueYourCarePage />} />
+    </Routes>
   )
 }

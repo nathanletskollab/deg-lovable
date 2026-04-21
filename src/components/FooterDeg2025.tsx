@@ -43,15 +43,17 @@ export default function FooterDeg2025() {
                 {column.title}
               </h2>
               <ul>
-                {column.items.map((item) => (
-                  <li key={item}>
-                    {item.split('\n').map((line) => (
-                      <span key={line} className="menu-line text-lg font-sans font-normal">
-                        {line}
-                      </span>
-                    ))}
-                  </li>
-                ))}
+                {column.items.map((item) => {
+                  const [label, qualifier] = item.split('\n')
+                  return (
+                    <li key={item}>
+                      <span className="menu-line">{label}</span>
+                      {qualifier && (
+                        <span className="menu-line-qualifier">{qualifier}</span>
+                      )}
+                    </li>
+                  )
+                })}
               </ul>
             </article>
           ))}

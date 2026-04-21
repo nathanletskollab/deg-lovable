@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import section2Bg from '@/assets/section2-bg.png'
+import section2Bg from '@/assets/section2-bg.png?format=webp&as=url'
 import beachVideo from '@/assets/beach-video.mp4'
 import beachPoster from '@/assets/beach-poster.jpg'
 
@@ -56,7 +56,7 @@ const QuoteVideoSection = () => {
         {/* Bridge: cream section behind the video's lower half */}
         <div
           className="absolute bottom-0 left-0 right-0 h-[55%] rounded-t-[var(--section-radius)] z-[0]"
-          style={{ backgroundColor: '#F7F5EE' }}
+          style={{ backgroundColor: 'hsl(var(--background))' }}
         />
 
         {/* Video — floats above the bridge */}
@@ -73,6 +73,7 @@ const QuoteVideoSection = () => {
               loop
               muted
               playsInline
+              preload="metadata"
               poster={beachPoster}
               className="w-full h-auto object-cover aspect-video"
             >

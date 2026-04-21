@@ -70,8 +70,8 @@ export default {
         section: 'var(--section-radius)',
       },
       fontFamily: {
-        serif: ["'Source Serif 4'", 'serif'],
-        sans: ["'Source Sans 3'", 'sans-serif'],
+        serif: ["'Cormorant Garamond'", 'Georgia', 'serif'],
+        sans: ["'Instrument Sans'", 'system-ui', 'sans-serif'],
       },
       boxShadow: {
         DEFAULT: 'var(--shadow)',

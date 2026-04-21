@@ -87,96 +87,89 @@
     color: hsl(var(--foreground));
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-family: 'Source Sans 3', sans-serif;
+    font-family: 'Instrument Sans', sans-serif;
   }
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Source Serif 4', serif;
+    font-family: 'Cormorant Garamond', serif;
   }
 }
 
 @layer components {
   /* ─── Typography tokens ─────────────────────────────── */
   .type-display {
-    font-family: 'Source Serif 4', serif;
+    font-family: 'Cormorant Garamond', Georgia, serif;
     font-size: 2.5rem;
-    font-weight: 300;
-    line-height: 1.08;
-    letter-spacing: -0.02em;
+    font-weight: 400;
+    line-height: 1.06;
+    letter-spacing: -0.01em;
   }
 
   .type-h1 {
-    font-family: 'Source Serif 4', serif;
+    font-family: 'Cormorant Garamond', Georgia, serif;
     font-size: 2rem;
     font-weight: 400;
     line-height: 1.1;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
   }
 
   .type-h2 {
-    font-family: 'Source Serif 4', serif;
+    font-family: 'Cormorant Garamond', Georgia, serif;
     font-size: 1.5rem;
     font-weight: 400;
     line-height: 1.15;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
   }
 
   .type-h3 {
-    font-family: 'Source Serif 4', serif;
+    font-family: 'Cormorant Garamond', Georgia, serif;
     font-size: 1.25rem;
     font-weight: 500;
     line-height: 1.2;
-    letter-spacing: -0.015em;
+    letter-spacing: -0.005em;
   }
 
   .type-serif-italic {
-    font-family: 'Source Serif 4', serif;
+    font-family: 'Cormorant Garamond', Georgia, serif;
     font-style: italic;
     font-weight: 400;
     font-size: 1.375rem;
     line-height: 1.25;
-    letter-spacing: -0.01em;
+    letter-spacing: 0;
   }
 
   .type-serif-quote {
-    font-family: 'Source Serif 4', serif;
+    font-family: 'Cormorant Garamond', Georgia, serif;
     font-style: italic;
     font-weight: 400;
     font-size: 1.75rem;
     line-height: 1.25;
-    letter-spacing: -0.01em;
+    letter-spacing: 0;
   }
 
   .type-serif-lead {
-    font-family: 'Source Serif 4', serif;
+    font-family: 'Cormorant Garamond', Georgia, serif;
     font-size: 1.125rem;
     font-weight: 400;
-    line-height: 1.38;
-    letter-spacing: -0.01em;
+    line-height: 1.45;
+    letter-spacing: 0;
   }
 
   .type-body {
-    font-family: 'Source Sans 3', sans-serif;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-  }
-
-  .type-body-md {
-    font-family: 'Source Sans 3', sans-serif;
+    font-family: 'Instrument Sans', sans-serif;
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.5;
   }
 
   .type-body-sm {
-    font-family: 'Source Sans 3', sans-serif;
+    font-family: 'Instrument Sans', sans-serif;
     font-size: 0.875rem;
     font-weight: 400;
     line-height: 1.4;
   }
 
   .type-eyebrow {
-    font-family: 'Source Sans 3', sans-serif;
+    font-family: 'Instrument Sans', sans-serif;
     font-size: 0.8125rem;
     font-weight: 400;
     line-height: 1.4;
@@ -186,7 +179,7 @@
   }
 
   .type-eyebrow-lg {
-    font-family: 'Source Sans 3', sans-serif;
+    font-family: 'Instrument Sans', sans-serif;
     font-size: 1.5rem;
     font-weight: 400;
     line-height: 1.4;
@@ -202,7 +195,6 @@
   .type-h1 { font-size: 2rem; }
   .type-h2 { font-size: 1.875rem; }
   .type-h3 { font-size: 1.5rem; }
-  .type-body { font-size: 1.125rem; }
   .type-serif-italic { font-size: 2.125rem; }
   .type-serif-quote { font-size: 2.125rem; }
   .type-serif-lead { font-size: 1.25rem; }
@@ -214,7 +206,6 @@
   .type-h1 { font-size: 2.5rem; }
   .type-h2 { font-size: 2.25rem; }
   .type-h3 { font-size: 1.75rem; }
-  .type-body { font-size: 1.125rem; }
   .type-serif-italic { font-size: 2.25rem; }
   .type-serif-quote { font-size: 2.25rem; }
   .type-serif-lead { font-size: 1.375rem; }
@@ -225,10 +216,10 @@
     text-wrap: balance;
   }
   .font-serif-display {
-    font-family: 'Source Serif 4', serif;
+    font-family: 'Cormorant Garamond', serif;
   }
   .font-sans-body {
-    font-family: 'Source Sans 3', sans-serif;
+    font-family: 'Instrument Sans', sans-serif;
   }
   .card-shadow {
     box-shadow: 6px 7px 0 0 rgba(24, 25, 23, 0.20);
@@ -296,6 +287,21 @@ html {
   }
 }
 
+/* Footer sticky reveal — desktop only.
+   On mobile the footer is taller than the viewport so we render it in normal
+   flow; on md+ the sticky-bottom reveal kicks in and a JS spacer is added to
+   ensure the full footer is always scrollable into view. */
+.footer-sticky-wrapper {
+  position: relative;
+  z-index: 0;
+}
+@media (min-width: 768px) {
+  .footer-sticky-wrapper {
+    position: sticky;
+    bottom: 0;
+  }
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
@@ -306,4 +312,23 @@ html {
 ::-webkit-scrollbar-thumb {
   background: hsl(var(--sand));
   border-radius: 3px;
+}
+
+/* ─── Keyboard focus indicators (WCAG 2.4.7) ─────────────────────────── */
+:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ─── Reduced motion (WCAG 2.3.3) ────────────────────────────────────── */
+/* CSS transitions/animations are killed here.
+   Framer Motion JS animations are handled via MotionConfig in App.tsx. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
