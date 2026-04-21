@@ -1,0 +1,334 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 40 25% 95%;
+    --foreground: 40 4% 14%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 40 4% 14%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 40 4% 14%;
+
+    --primary: 162 30% 17%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 33 18% 90%;
+    --secondary-foreground: 40 4% 14%;
+
+    --muted: 27 30% 93%;
+    --muted-foreground: 60 1% 55%;
+
+    --accent: 9 45% 73%;
+    --accent-foreground: 40 4% 14%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 36 21% 86%;
+    --input: 36 21% 86%;
+    --ring: 162 30% 17%;
+
+    --radius: 0.5rem;
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+
+    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+
+    /* Brand extras */
+    --primary-pine: 162 30% 17%;
+    --accent-rose: 9 45% 73%;
+    --sage: 85 9% 63%;
+    --sand: 35 21% 71%;
+    --surface-warm: 27 30% 93%;
+    --card-peach: 16 47% 88%;
+    --card-sage: 40 19% 88%;
+    --card-mint: 66 14% 85%;
+    --card-olive: 48 27% 87%;
+    --chip-bg: 33 18% 90%;
+
+    /* Section styling */
+    --section-overlap: calc(var(--section-radius) + 20px);
+    --section-radius: 80px;
+
+    /* Section textures */
+    --texture-cross: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    --texture-dots: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Ccircle cx='1' cy='1' r='1'/%3E%3C/g%3E%3C/svg%3E");
+    --texture-grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+
+    --sidebar-background: 40 25% 95%;
+    --sidebar-foreground: 40 4% 14%;
+    --sidebar-primary: 162 30% 17%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 33 18% 90%;
+    --sidebar-accent-foreground: 40 4% 14%;
+    --sidebar-border: 36 21% 86%;
+    --sidebar-ring: 162 30% 17%;
+  }
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    border-color: hsl(var(--border));
+  }
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: 'Instrument Sans', sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cormorant Garamond', serif;
+  }
+}
+
+@layer components {
+  /* ─── Typography tokens ─────────────────────────────── */
+  .type-display {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 2.5rem;
+    font-weight: 400;
+    line-height: 1.06;
+    letter-spacing: -0.01em;
+  }
+
+  .type-h1 {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 2rem;
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+
+  .type-h2 {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+
+  .type-h3 {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.005em;
+  }
+
+  .type-serif-italic {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.375rem;
+    line-height: 1.25;
+    letter-spacing: 0;
+  }
+
+  .type-serif-quote {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.75rem;
+    line-height: 1.25;
+    letter-spacing: 0;
+  }
+
+  .type-serif-lead {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.125rem;
+    font-weight: 400;
+    line-height: 1.45;
+    letter-spacing: 0;
+  }
+
+  .type-body {
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  .type-body-sm {
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.4;
+  }
+
+  .type-eyebrow {
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(24, 25, 23, 0.50);
+  }
+
+  .type-eyebrow-lg {
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    color: rgba(24, 25, 23, 0.50);
+  }
+}
+
+/* Typography responsive overrides */
+@media (min-width: 768px) {
+  .type-display { font-size: 3.25rem; }
+  .type-h1 { font-size: 2rem; }
+  .type-h2 { font-size: 1.875rem; }
+  .type-h3 { font-size: 1.5rem; }
+  .type-serif-italic { font-size: 2.125rem; }
+  .type-serif-quote { font-size: 2.125rem; }
+  .type-serif-lead { font-size: 1.25rem; }
+  .type-eyebrow { font-size: 1rem; }
+}
+
+@media (min-width: 1024px) {
+  .type-display { font-size: 4rem; }
+  .type-h1 { font-size: 2.5rem; }
+  .type-h2 { font-size: 2.25rem; }
+  .type-h3 { font-size: 1.75rem; }
+  .type-serif-italic { font-size: 2.25rem; }
+  .type-serif-quote { font-size: 2.25rem; }
+  .type-serif-lead { font-size: 1.375rem; }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .font-serif-display {
+    font-family: 'Cormorant Garamond', serif;
+  }
+  .font-sans-body {
+    font-family: 'Instrument Sans', sans-serif;
+  }
+  .card-shadow {
+    box-shadow: 6px 7px 0 0 rgba(24, 25, 23, 0.20);
+  }
+}
+
+/* Section layer system */
+.section-layer {
+  position: relative;
+  width: 100%;
+  isolation: isolate;
+}
+
+.section-texture-cross::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--texture-cross);
+  opacity: 0.02;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.section-texture-dots::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--texture-dots);
+  opacity: 0.03;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.section-texture-grain::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--texture-grain);
+  opacity: 1;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+/* Section layer stacking */
+.section-layer--overlap {
+  margin-top: calc(-1 * var(--section-overlap));
+  border-top-left-radius: var(--section-radius);
+  border-top-right-radius: var(--section-radius);
+}
+
+.section-layer--has-overlap {
+  padding-bottom: var(--section-overlap);
+}
+
+/* Responsive section radius */
+@media screen and (max-width: 767px) {
+  :root {
+    --section-radius: 60px;
+  }
+}
+
+/* Footer sticky reveal — desktop only.
+   On mobile the footer is taller than the viewport so we render it in normal
+   flow; on md+ the sticky-bottom reveal kicks in and a JS spacer is added to
+   ensure the full footer is always scrollable into view. */
+.footer-sticky-wrapper {
+  position: relative;
+  z-index: 0;
+}
+@media (min-width: 768px) {
+  .footer-sticky-wrapper {
+    position: sticky;
+    bottom: 0;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--sand));
+  border-radius: 3px;
+}
+
+/* ─── Keyboard focus indicators (WCAG 2.4.7) ─────────────────────────── */
+:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ─── Reduced motion (WCAG 2.3.3) ────────────────────────────────────── */
+/* CSS transitions/animations are killed here.
+   Framer Motion JS animations are handled via MotionConfig in App.tsx. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
