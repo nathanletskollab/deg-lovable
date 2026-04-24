@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, useCallback } from 'react'
+import React, { useRef, useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import step1Img from '@/assets/step-1.png?format=webp&as=url'
 import step2Img from '@/assets/step-2.png?format=webp&as=url'
@@ -59,8 +59,10 @@ const TimelineStep = ({
     ref={stepRef}
     className="relative pl-8 md:pl-16 py-16 md:py-24"
     style={{
-      opacity: isActive ? 1 : 0.55,
-      transition: 'opacity 0.5s ease',
+      opacity: isActive ? 1 : 0.4,
+      // Delight: active step drifts in from the left — feels like it's arriving
+      transform: isActive ? 'translateX(0px)' : 'translateX(-7px)',
+      transition: 'opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1), transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)',
     }}
   >
     <span
@@ -90,9 +92,10 @@ const TimelineStep = ({
 
     <div className="flex flex-wrap gap-2">
       {step.tags.map((tag) => (
+        // Delight: subtle fill on hover — chips feel interactive, not static
         <span
           key={tag}
-          className="inline-block type-body-sm px-3 py-1 bg-background"
+          className="tag-chip inline-block type-body-sm px-3 py-1 bg-background cursor-default"
           style={{ borderRadius: '60px', border: '2px solid rgba(196, 183, 165, 0.80)' }}
         >
           {tag}
@@ -107,8 +110,10 @@ const ApproachSection = () => {
   const stepRefs = useRef<(HTMLDivElement | null)[]>([])
   const kickerRefs = useRef<(HTMLSpanElement | null)[]>([])
   const [activeStep, setActiveStep] = useState(0)
-  const [progress, setProgress] = useState(0)
   const [dotTops, setDotTops] = useState<number[]>([])
+  // Delight: pulse keys — incrementing triggers the ring animation replay per dot
+  const [pulseKeys, setPulseKeys] = useState([0, 0, 0])
+  const prevActiveStep = useRef<number>(-1)
 
   const measureDots = useCallback(() => {
     const container = containerRef.current
@@ -133,47 +138,49 @@ const ApproachSection = () => {
     return () => window.removeEventListener('resize', measureDots)
   }, [measureDots])
 
-  useEffect(() => {
-    const observers: IntersectionObserver[] = []
-    stepRefs.current.forEach((el, i) => {
-      if (!el) return
-      const obs = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) setActiveStep(i)
-          })
-        },
-        { threshold: [0.15, 0.3, 0.5], rootMargin: '-10% 0px -40% 0px' }
-      )
-      obs.observe(el)
-      observers.push(obs)
-    })
-    return () => observers.forEach((o) => o.disconnect())
-  }, [])
-
+  // Scroll handler — whichever kicker is closest to 40vh sets the active step
   useEffect(() => {
     const recalc = () => {
       const el = containerRef.current
       if (!el) return
-      const rect = el.getBoundingClientRect()
-      const totalHeight = el.scrollHeight
-      const scrolled = -rect.top + window.innerHeight * 0.5
-      const pct = Math.max(0, Math.min(100, (scrolled / totalHeight) * 100))
-      setProgress(pct)
+
+      // Active step: whichever kicker is closest to 40% down the viewport
+      const target = window.innerHeight * 0.4
+      let closest = 0
+      let minDist = Infinity
+      kickerRefs.current.forEach((kicker, i) => {
+        if (!kicker) return
+        const rect = kicker.getBoundingClientRect()
+        const dist = Math.abs(rect.top + rect.height / 2 - target)
+        if (dist < minDist) {
+          minDist = dist
+          closest = i
+        }
+      })
+      setActiveStep(closest)
     }
+
     recalc()
     window.addEventListener('scroll', recalc, { passive: true })
     return () => window.removeEventListener('scroll', recalc)
   }, [])
 
+  // Delight: fire dot pulse ring when active step changes (skip initial mount)
   useEffect(() => {
-    measureDots()
-  }, [measureDots])
+    if (prevActiveStep.current === activeStep) return
+    if (prevActiveStep.current >= 0) {
+      setPulseKeys(keys => keys.map((k, i) => i === activeStep ? k + 1 : k))
+    }
+    prevActiveStep.current = activeStep
+  }, [activeStep])
 
   const firstDot = dotTops[0] ?? 0
   const lastDot = dotTops[dotTops.length - 1] ?? 0
   const lineHeight = lastDot - firstDot
-  const progressHeight = lineHeight > 0 ? (progress / 100) * lineHeight : 0
+  // Snap to each step's dot — driven by activeStep, not raw scroll %
+  const scaleY = dotTops.length === steps.length && lineHeight > 0
+    ? (dotTops[activeStep] - firstDot) / lineHeight
+    : 0
 
   return (
     <section
@@ -213,12 +220,13 @@ const ApproachSection = () => {
                 key={i}
                 src={step.image}
                 alt=""
-                className="absolute inset-0 w-full h-full object-contain object-right transition-opacity duration-700"
+                className="absolute inset-0 w-full h-full object-contain object-right"
                 width={1033}
                 height={1536}
                 loading="lazy"
                 style={{
                   opacity: activeStep === i ? 0.45 : 0,
+                  transition: 'opacity 0.7s cubic-bezier(0.23, 1, 0.32, 1)',
                 }}
               />
             ))}
@@ -235,46 +243,71 @@ const ApproachSection = () => {
               <div
                 className="absolute pointer-events-none"
                 style={{
-                  left: `${LINE_LEFT}px`,
-                  top: `${firstDot}px`,
+                  left: LINE_LEFT - 1,  // center the 2px line under the dot center
+                  top: firstDot,
                   width: '2px',
-                  height: `${lineHeight}px`,
+                  height: lineHeight,
                   backgroundColor: 'hsl(var(--foreground) / 0.08)',
-                  transform: 'translateX(-1px)',
                 }}
               >
+                {/* scaleY snaps to active step's dot — GPU composited, intentional per-step feel */}
                 <div
-                  className="w-full rounded-full"
+                  className="w-full h-full rounded-full origin-top"
                   style={{
-                    height: `${Math.min(progressHeight, lineHeight)}px`,
                     backgroundColor: 'hsl(var(--foreground) / 0.25)',
-                    transition: 'height 0.15s linear',
+                    transform: `scaleY(${scaleY})`,
+                    transition: 'transform 0.5s cubic-bezier(0.23, 1, 0.32, 1)',
                   }}
                 />
               </div>
 
-              {dotTops.map((top, i) => (
-                <div
-                  key={i}
-                  className="absolute rounded-full border-2 transition-all duration-500"
-                  style={{
-                    left: `${LINE_LEFT}px`,
-                    top: `${top}px`,
-                    width: `${DOT_SIZE}px`,
-                    height: `${DOT_SIZE}px`,
-                    transform: `translate(-${DOT_SIZE / 2}px, -${DOT_SIZE / 2}px)`,
-                    zIndex: 2,
-                    borderColor:
-                      activeStep === i
-                        ? 'hsl(var(--foreground))'
-                        : 'hsl(var(--foreground) / 0.2)',
-                    backgroundColor:
-                      activeStep === i
-                        ? 'hsl(var(--foreground))'
-                        : 'hsl(var(--secondary))',
-                  }}
-                />
-              ))}
+              {dotTops.map((top, i) => {
+                // Pre-compute centered position so nothing fights over `transform`
+                const dotLeft = LINE_LEFT - DOT_SIZE / 2
+                const dotTop = top - DOT_SIZE / 2
+                return (
+                  <React.Fragment key={i}>
+                    {/* Delight: pulse ring — centered via left/top, scale-only animation, no transform conflict */}
+                    {pulseKeys[i] > 0 && (
+                      <motion.div
+                        key={`pulse-${i}-${pulseKeys[i]}`}
+                        className="absolute pointer-events-none rounded-full"
+                        initial={{ scale: 1, opacity: 0.45 }}
+                        animate={{ scale: 3, opacity: 0 }}
+                        transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
+                        style={{
+                          left: dotLeft,
+                          top: dotTop,
+                          width: DOT_SIZE,
+                          height: DOT_SIZE,
+                          border: '1.5px solid hsl(var(--foreground))',
+                          zIndex: 1,
+                        }}
+                      />
+                    )}
+                    {/* Dot — same centered position */}
+                    <div
+                      className="absolute rounded-full border-2"
+                      style={{
+                        left: dotLeft,
+                        top: dotTop,
+                        width: DOT_SIZE,
+                        height: DOT_SIZE,
+                        zIndex: 2,
+                        borderColor:
+                          activeStep === i
+                            ? 'hsl(var(--foreground))'
+                            : 'hsl(var(--foreground) / 0.2)',
+                        backgroundColor:
+                          activeStep === i
+                            ? 'hsl(var(--foreground))'
+                            : 'hsl(var(--secondary))',
+                        transition: 'border-color 0.5s cubic-bezier(0.23, 1, 0.32, 1), background-color 0.5s cubic-bezier(0.23, 1, 0.32, 1)',
+                      }}
+                    />
+                  </React.Fragment>
+                )
+              })}
             </>
           )}
 
@@ -291,22 +324,30 @@ const ApproachSection = () => {
         </div>
       </div>
 
-      {/* Closing quote */}
-      <div className="container max-w-3xl mx-auto relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.7 }}
-          className="text-center pt-24 md:pt-32 pb-24 md:pb-48"
-        >
-          <p className="type-serif-quote text-foreground/60 mb-1">
-            This is not a one-time<br className="md:hidden" /> approach to health.
-          </p>
-          <p className="type-serif-quote text-foreground/60 mb-10">
-            It's a relationship,<br className="md:hidden" /> supported over time.
-          </p>
-        </motion.div>
+      {/* Closing statement — screen-filling resonance */}
+      <div className="relative z-10">
+        <div className="container max-w-5xl mx-auto px-6">
+          <div className="min-h-[85vh] flex flex-col justify-center items-center text-center py-24 md:py-32">
+            <motion.p
+              className="type-serif-statement text-foreground/50 mb-3 md:mb-5"
+              initial={{ opacity: 0, transform: 'translateY(24px)', filter: 'blur(10px)' }}
+              whileInView={{ opacity: 1, transform: 'translateY(0px)', filter: 'blur(0px)' }}
+              viewport={{ once: true, margin: '-80px' }}
+              transition={{ duration: 1.3, ease: [0.23, 1, 0.32, 1] }}
+            >
+              This is not a one-time approach to health.
+            </motion.p>
+            <motion.p
+              className="type-serif-statement text-foreground/80"
+              initial={{ opacity: 0, transform: 'translateY(24px)', filter: 'blur(10px)' }}
+              whileInView={{ opacity: 1, transform: 'translateY(0px)', filter: 'blur(0px)' }}
+              viewport={{ once: true, margin: '-80px' }}
+              transition={{ duration: 1.3, ease: [0.23, 1, 0.32, 1], delay: 0.22 }}
+            >
+              It's a relationship, supported over time.
+            </motion.p>
+          </div>
+        </div>
       </div>
     </section>
   )

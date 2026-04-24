@@ -38,7 +38,7 @@ export default function HomePage() {
     <MotionConfig reducedMotion="user">
       <div className="bg-background">
         <Navbar />
-        <div style={{ position: 'relative', zIndex: 1, backgroundColor: 'hsl(var(--background))' }}>
+        <div style={{ position: 'relative', zIndex: 1, backgroundColor: 'hsl(var(--background))', overflow: 'clip' }}>
           <HeroSection />
           <GlassBlock />
           <QuoteVideoSection />
@@ -46,7 +46,8 @@ export default function HomePage() {
           <AboutSection />
           <FAQSection />
           <BeyondSection />
-          <div ref={spacerRef} aria-hidden="true" style={{ height: 0 }} />
+          {/* Dark bg blends the spacer into the footer video — no sandy dead-zone at max scroll */}
+          <div ref={spacerRef} aria-hidden="true" style={{ height: 0, background: '#0d1a16' }} />
         </div>
         <div ref={footerRef} className="footer-sticky-wrapper">
           <FooterDeg2025 />

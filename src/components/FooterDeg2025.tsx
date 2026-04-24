@@ -1,39 +1,71 @@
 import './FooterDeg2025.css'
-import textureImage from '@/assets/imgMashaKotliarenkoY0ZEs82Oxl0Unsplash2.jpg'
-import logoImage from '@/assets/EG-logo_stacked-v2.svg'
+import logoImage from '@/assets/footer/eg-logo-stacked.png'
 import iconStart from '@/assets/Layer 39.svg'
 import iconCare from '@/assets/Layer 1.svg'
 import iconPractice from '@/assets/Layer 2.svg'
 import iconBeyond from '@/assets/Layer 36.svg'
-import arrowRightDark from '@/assets/imgArrowRight.svg'
 import arrowRightLight from '@/assets/imgArrowRight1.svg'
+import beachVideo from '@/assets/beach-video.mp4'
+import beachPoster from '@/assets/beach-poster.jpg'
 
 const menuColumns = [
   {
     title: 'START YOUR CARE',
     icon: iconStart,
-    items: ['Start with Dr. Erica', 'Book an Appointment', 'Follow-Up with Erica'],
+    items: [
+      { label: 'Start with Dr. Erica', href: '/start-your-care' },
+      { label: 'Book an Appointment', href: 'https://drericagrenci.janeapp.com/' },
+      { label: 'Follow-Up with Erica', href: 'https://drericagrenci.janeapp.com/' },
+    ],
   },
   {
     title: 'YOUR CARE',
     icon: iconCare,
-    items: ['Continue Your Care', 'Your Care Team', 'Your Health Record\n(coming soon)'],
+    items: [
+      { label: 'Continue Your Care', href: '/continue-your-care' },
+      { label: 'Your Care Team', href: '/continue-your-care#team' },
+      { label: 'Your Health Record', href: '#', qualifier: 'coming soon' },
+    ],
   },
   {
     title: 'ABOUT THE PRACTICE',
     icon: iconPractice,
-    items: ['About Dr. Erica', 'Our Approach to Care', 'FAQ'],
+    items: [
+      { label: 'About Dr. Erica', href: '#about' },
+      { label: 'Our Approach to Care', href: '#approach' },
+      { label: 'FAQ', href: '#faq' },
+    ],
   },
   {
     title: 'BEYOND THE CLINIC',
     icon: iconBeyond,
-    items: ['The Wellness Library', 'Earth Spirit Medicine', 'Earth Spirit Sanctuary\n(coming soon)'],
+    items: [
+      { label: 'The Wellness Library', href: '#beyond' },
+      { label: 'Earth Spirit Medicine', href: '#beyond' },
+      { label: 'Earth Spirit Sanctuary', href: '#', qualifier: 'coming soon' },
+    ],
   },
 ]
 
 export default function FooterDeg2025() {
   return (
-    <main data-navbar-theme="dark" className="footer-page section-layer section-layer--overlap relative" style={{ borderRadius: 0, zIndex: 0 }}>
+    <main data-navbar-theme="dark" className="footer-page relative" style={{ zIndex: 0 }}>
+
+      {/* Video background */}
+      <div className="footer-video-bg">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster={beachPoster}
+          className="footer-video"
+        >
+          <source src={beachVideo} type="video/mp4" />
+        </video>
+        <div className="footer-video-overlay" />
+      </div>
+
       <section className="footer-content">
         <div className="menu-grid px-0 text-left">
           {menuColumns.map((column) => (
@@ -43,17 +75,20 @@ export default function FooterDeg2025() {
                 {column.title}
               </h2>
               <ul>
-                {column.items.map((item) => {
-                  const [label, qualifier] = item.split('\n')
-                  return (
-                    <li key={item}>
-                      <span className="menu-line">{label}</span>
-                      {qualifier && (
-                        <span className="menu-line-qualifier">{qualifier}</span>
-                      )}
-                    </li>
-                  )
-                })}
+                {column.items.map((item) => (
+                  <li key={item.label}>
+                    <a
+                      href={item.href}
+                      className="menu-line"
+                      {...(item.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                    >
+                      {item.label}
+                    </a>
+                    {item.qualifier && (
+                      <span className="menu-line-qualifier">{item.qualifier}</span>
+                    )}
+                  </li>
+                ))}
               </ul>
             </article>
           ))}
@@ -63,14 +98,14 @@ export default function FooterDeg2025() {
           <h1>Not sure where to start?</h1>
           <p className="text-base">Begin with Dr. Erica — we will guide you.</p>
           <div className="cta-actions">
-            <button className="primary-btn" type="button">
-              Start with Dr. Erica <img src={arrowRightDark} alt="" aria-hidden />
-            </button>
-            <button className="secondary-btn" type="button">
+            <a href="/start-your-care" className="primary-btn" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', borderRadius: '58px', height: '40px', padding: '0 24px', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500, letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>
+              Start with Dr. Erica <img src={arrowRightLight} alt="" aria-hidden />
+            </a>
+            <a href="#connect" className="secondary-btn" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', borderRadius: '58px', height: '40px', padding: '0 24px', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500, letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>
               Ask a Question <img src={arrowRightLight} alt="" aria-hidden />
-            </button>
+            </a>
           </div>
-          <a href="https://drericagrenci.janeapp.com/" className="patient-link">
+          <a href="/continue-your-care" className="patient-link">
             <span className="text-base">Already a patient? </span>
             <span className="patient-link-underlined text-base">Continue your care →</span>
           </a>
@@ -84,15 +119,10 @@ export default function FooterDeg2025() {
       <footer className="legal-row">
         <p className="text-sm">© {new Date().getFullYear()} Dr. Erica Grenci, ND. All rights reserved.</p>
         <div>
-          <a href="/" className="text-sm">Privacy Policy</a>
-          <a href="/" className="text-sm">Terms</a>
+          <a href="/privacy" className="text-sm">Privacy Policy</a>
+          <a href="/terms" className="text-sm">Terms</a>
         </div>
       </footer>
-
-      <div className="texture-mask">
-        <div className="texture-overlay" />
-        <img src={textureImage} alt="" aria-hidden />
-      </div>
     </main>
   )
 }

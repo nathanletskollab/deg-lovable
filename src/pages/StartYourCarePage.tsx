@@ -74,7 +74,7 @@ function CareHeroSection({ mode }: CareHeroProps) {
     <section
       data-navbar-theme="dark"
       className="section-layer relative overflow-hidden"
-      style={{ height: '60vh', minHeight: '480px' }}
+      style={{ minHeight: 'max(60vh, 480px)' }}
     >
       {/* Full-bleed background image */}
       <img
@@ -89,8 +89,8 @@ function CareHeroSection({ mode }: CareHeroProps) {
       {/* Color tint overlay */}
       <div className="absolute inset-0" style={{ background: overlayColor }} aria-hidden />
 
-      {/* Content — flex column, vertically centered, toggle anchored below body text */}
-      <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6 sm:px-10 max-w-2xl mx-auto" style={{ paddingTop: '72px' }}>
+      {/* Content */}
+      <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 sm:px-10 max-w-2xl mx-auto" style={{ paddingTop: 'max(96px, 14vh)', paddingBottom: 'max(64px, 10vh)' }}>
         <motion.p
           className="type-eyebrow mb-4"
           initial={{ opacity: 0 }}
@@ -156,7 +156,7 @@ function TrustSection() {
             className="text-foreground mb-6"
             style={{
               fontFamily: "'Cormorant Garamond', Georgia, serif",
-              fontSize: 'clamp(2rem, 4.5vw, 3.25rem)',
+              fontSize: 'clamp(2.5rem, 4.5vw, 3.25rem)',
               fontWeight: 400,
               letterSpacing: '-0.02em',
               lineHeight: 1.1,
@@ -224,30 +224,36 @@ function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
         className="w-full flex items-start justify-between gap-4 py-4 text-left transition-colors hover:text-foreground"
         aria-expanded={open}
         aria-controls={id}
-        style={{ color: open ? 'hsl(var(--foreground))' : 'hsl(var(--foreground) / 0.75)' }}
+        style={{ color: open ? 'hsl(var(--foreground))' : 'hsl(var(--foreground) / 0.75)', transition: 'color 0.2s ease' }}
       >
         <span className="font-sans text-sm font-medium leading-snug">{q}</span>
         <span className="flex-shrink-0 mt-0.5" style={{ color: 'hsl(var(--primary))' }}>
           <ChevronDown open={open} />
         </span>
       </button>
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div
-            id={id}
-            role="region"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
-            style={{ overflow: 'hidden' }}
+      <div
+        id={id}
+        role="region"
+        style={{
+          display: 'grid',
+          gridTemplateRows: open ? '1fr' : '0fr',
+          transition: 'grid-template-rows 0.3s cubic-bezier(0.25, 1, 0.5, 1)',
+          overflow: 'hidden',
+        }}
+      >
+        <div style={{ overflow: 'hidden' }}>
+          <p
+            className="pb-4 font-sans text-sm leading-relaxed"
+            style={{
+              color: 'hsl(var(--foreground) / 0.6)',
+              opacity: open ? 1 : 0,
+              transition: 'opacity 0.25s ease',
+            }}
           >
-            <p className="pb-4 font-sans text-sm leading-relaxed" style={{ color: 'hsl(var(--foreground) / 0.6)' }}>
-              {a}
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            {a}
+          </p>
+        </div>
+      </div>
     </div>
   )
 }
@@ -271,10 +277,10 @@ function ConsultationSection() {
         >
           <p className="type-eyebrow mb-4">Book Your Visit</p>
           <h2
-            className="text-foreground"
+            className="text-foreground whitespace-nowrap"
             style={{
               fontFamily: "'Cormorant Garamond', Georgia, serif",
-              fontSize: 'clamp(2rem, 4.5vw, 3.25rem)',
+              fontSize: 'clamp(1.75rem, 4.5vw, 3.25rem)',
               fontWeight: 400,
               letterSpacing: '-0.02em',
               lineHeight: 1.08,
@@ -364,11 +370,10 @@ function ConsultationSection() {
 
               {/* Price */}
               <p
-                className="text-foreground mb-5"
+                className="text-foreground mb-5 font-sans"
                 style={{
-                  fontFamily: "'Cormorant Garamond', Georgia, serif",
-                  fontSize: '2rem',
-                  fontWeight: 400,
+                  fontSize: '1.75rem',
+                  fontWeight: 500,
                   letterSpacing: '-0.02em',
                   lineHeight: 1,
                 }}
@@ -449,7 +454,7 @@ function OutcomesSection() {
   return (
     <section
       data-navbar-theme="dark"
-      className="section-layer section-layer--overlap section-layer--has-overlap relative z-[4] pt-20 md:pt-28"
+      className="section-layer section-layer--overlap section-layer--has-overlap relative z-[4] pt-20 md:pt-28 overflow-hidden"
       style={{ background: 'hsl(var(--surface-warm))' }}
     >
       <div className="container">
@@ -496,7 +501,7 @@ function OutcomesSection() {
                 className="text-foreground"
                 style={{
                   fontFamily: "'Cormorant Garamond', Georgia, serif",
-                  fontSize: 'clamp(1.25rem, 2.5vw, 1.625rem)',
+                  fontSize: 'clamp(1.5rem, 2.5vw, 1.75rem)',
                   fontWeight: 500,
                   lineHeight: 1.15,
                   letterSpacing: '-0.015em',

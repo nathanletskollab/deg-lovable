@@ -20,7 +20,7 @@ function ContinueHeroSection() {
     <section
       data-navbar-theme="dark"
       className="section-layer relative overflow-hidden"
-      style={{ height: '60vh', minHeight: '480px' }}
+      style={{ minHeight: 'max(60vh, 480px)' }}
     >
       {/* Full-bleed background image */}
       <img
@@ -35,7 +35,7 @@ function ContinueHeroSection() {
       {/* Warm blush tint overlay */}
       <div className="absolute inset-0" style={{ background: 'rgba(218, 198, 182, 0.88)' }} aria-hidden />
 
-      <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6 sm:px-10 max-w-2xl mx-auto" style={{ paddingTop: '72px' }}>
+      <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 sm:px-10 max-w-2xl mx-auto" style={{ paddingTop: 'max(96px, 14vh)', paddingBottom: 'max(64px, 10vh)' }}>
         <motion.p
           className="type-eyebrow mb-4"
           initial={{ opacity: 0 }}
@@ -349,6 +349,193 @@ function CareTeamSection() {
   )
 }
 
+const whyPrinciples = [
+  {
+    title: 'Regulated for your safety',
+    body: 'The College of Naturopaths of Ontario requires a full intake before any prescription or compound — protecting you from generic advice.',
+    delay: 0.1,
+  },
+  {
+    title: 'Care is contextual',
+    body: 'Your protocol is built from your full picture — symptoms, history, lifestyle, and goals. Nothing is recommended in isolation.',
+    delay: 0.2,
+  },
+  {
+    title: 'An active partnership',
+    body: 'Naturopathy works best for those who want to understand their body and participate in their care — preventive, regenerative, ongoing.',
+    delay: 0.3,
+  },
+]
+
+function WhyCareBegins() {
+  return (
+    <section
+      data-navbar-theme="dark"
+      className="section-layer section-layer--overlap section-layer--has-overlap relative z-[4] pt-20 md:pt-28 overflow-hidden"
+      style={{ background: 'hsl(var(--surface-warm))' }}
+    >
+      <div className="container">
+        <div className="grid md:grid-cols-2 gap-12 md:gap-20 mb-20 md:mb-28">
+          {/* Left: headline block */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+          >
+            <p className="type-eyebrow mb-5">Why Care Begins Here</p>
+            <h2
+              className="text-foreground mb-6"
+              style={{
+                fontFamily: "'Cormorant Garamond', Georgia, serif",
+                fontSize: 'clamp(2rem, 4.5vw, 3.25rem)',
+                fontWeight: 400,
+                letterSpacing: '-0.02em',
+                lineHeight: 1.08,
+              }}
+            >
+              Naturopathy is a <em>relationship,</em> not a transaction.
+            </h2>
+            <p className="type-body text-foreground/65 leading-relaxed">
+              In Ontario, naturopathic doctors are regulated to work from context — not from a shelf. Erica can only recommend herbs, compounds, or protocols once she truly understands you. It isn't a hurdle. It's the principle the whole practice is built on — care that fits your body, your history, your story.
+            </p>
+          </motion.div>
+
+          {/* Right: principle cards */}
+          <div className="flex flex-col gap-5">
+            {whyPrinciples.map((p) => (
+              <motion.div
+                key={p.title}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: p.delay, ease: [0.25, 1, 0.5, 1] }}
+                className="rounded-2xl p-6 md:p-7"
+                style={{ background: 'hsl(0 0% 100%)', border: '1px solid hsl(var(--border))' }}
+              >
+                <h3
+                  className="text-foreground mb-2"
+                  style={{
+                    fontFamily: "'Cormorant Garamond', Georgia, serif",
+                    fontSize: 'clamp(1.125rem, 1.8vw, 1.35rem)',
+                    fontWeight: 500,
+                    lineHeight: 1.2,
+                  }}
+                >
+                  {p.title}
+                </h3>
+                <p className="type-body-sm text-foreground/65 leading-relaxed">{p.body}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function ApothecarySection() {
+  return (
+    <section
+      data-navbar-theme="dark"
+      className="section-layer section-layer--overlap section-layer--has-overlap relative z-[5] pt-20 md:pt-28 overflow-hidden"
+      style={{ background: 'hsl(0 0% 100%)' }}
+    >
+      <div className="container">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          className="mb-10 md:mb-14"
+        >
+          <p className="type-eyebrow mb-4">What Becoming a Patient Unlocks</p>
+          <h2
+            className="text-foreground"
+            style={{
+              fontFamily: "'Cormorant Garamond', Georgia, serif",
+              fontSize: 'clamp(2rem, 4.5vw, 3.25rem)',
+              fontWeight: 400,
+              letterSpacing: '-0.02em',
+              lineHeight: 1.08,
+            }}
+          >
+            Access to Erica's <em>Apothecary</em>
+          </h2>
+        </motion.div>
+
+        <div className="grid md:grid-cols-2 gap-10 md:gap-16 pb-24 md:pb-36 items-center">
+          {/* Image */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="rounded-3xl overflow-hidden aspect-[4/3]"
+            style={{ boxShadow: '6px 7px 0 0 rgba(24, 25, 23, 0.12)' }}
+          >
+            <img
+              src={aboutPortrait}
+              alt="Erica's herbal apothecary"
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
+          </motion.div>
+
+          {/* Text */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+          >
+            <p className="type-body text-foreground/70 leading-relaxed mb-5">
+              Erica is a Naturopathic Doctor (Canadian College of Naturopathic Medicine) and a Master Herbalist, trained at the School of Natural Healing under the lineage of Dr. John R. Christopher — a pioneering author and thought leader in Western herbal medicine.
+            </p>
+            <p className="type-body text-foreground/70 leading-relaxed">
+              Her license in Ontario allows her to practice naturopathy and herbalism with patients — meaning she can formulate and compound custom herbal blends specifically for your body. This is care that exists only inside the patient relationship.
+            </p>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function BigQuoteSection() {
+  return (
+    <section
+      data-navbar-theme="light"
+      className="section-layer section-layer--overlap section-layer--has-overlap relative z-[6] overflow-hidden"
+      style={{ background: 'hsl(var(--primary))' }}
+    >
+      <div className="container flex items-center justify-center" style={{ minHeight: '40vh', paddingTop: '80px', paddingBottom: '80px' }}>
+        <motion.blockquote
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.9 }}
+          className="max-w-3xl text-center"
+        >
+          <p
+            style={{
+              fontFamily: "'Cormorant Garamond', Georgia, serif",
+              fontSize: 'clamp(1.75rem, 4vw, 3rem)',
+              fontWeight: 400,
+              fontStyle: 'italic',
+              lineHeight: 1.25,
+              letterSpacing: '-0.015em',
+              color: 'hsl(0 0% 100% / 0.92)',
+            }}
+          >
+            "Naturopathy isn't for everyone — and that's okay. It's for people who want to understand their body, and grow with it over time."
+          </p>
+        </motion.blockquote>
+      </div>
+    </section>
+  )
+}
+
 export default function ContinueYourCarePage() {
   const footerRef = useRef<HTMLDivElement>(null)
   const spacerRef = useRef<HTMLDivElement>(null)
@@ -381,6 +568,9 @@ export default function ContinueYourCarePage() {
           <ContinueHeroSection />
           <DrEricaSessionsSection />
           <CareTeamSection />
+          <WhyCareBegins />
+          <ApothecarySection />
+          <BigQuoteSection />
           <div ref={spacerRef} aria-hidden="true" style={{ height: 0 }} />
         </div>
         <div ref={footerRef} className="footer-sticky-wrapper">

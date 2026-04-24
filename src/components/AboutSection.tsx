@@ -6,8 +6,8 @@ const AboutSection = () => {
     <section
       id="about"
       data-navbar-theme="dark"
-      className="section-layer section-layer--overlap section-layer--has-overlap relative z-[6] overflow-hidden pt-20 md:pt-32 pb-36 md:pb-52"
-      style={{ background: 'hsl(var(--background))' }}
+      className="section-layer section-layer--overlap section-layer--has-overlap relative z-[6] overflow-hidden pt-20 md:pt-32"
+      style={{ background: 'hsl(var(--background))', paddingBottom: '280px' }}
     >
       <div className="container relative z-10">
         <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-center">

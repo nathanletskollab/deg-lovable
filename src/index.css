@@ -146,6 +146,16 @@
     letter-spacing: 0;
   }
 
+  /* Screen-scale statement — fluid from 2.5rem → 6rem */
+  .type-serif-statement {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(2.5rem, 7vw, 6rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
   .type-serif-lead {
     font-family: 'Cormorant Garamond', Georgia, serif;
     font-size: 1.125rem;
@@ -224,6 +234,19 @@
   .card-shadow {
     box-shadow: 6px 7px 0 0 rgba(24, 25, 23, 0.20);
   }
+
+  /* ─── Tag chips ─────────────────────────────────────── */
+  .tag-chip {
+    transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .tag-chip:hover {
+      border-color: rgba(196, 183, 165, 0.35) !important;
+      transform: translateY(-3px);
+      box-shadow: 3px 4px 0 0 rgba(24, 25, 23, 0.10);
+    }
+  }
 }
 
 /* Section layer system */
@@ -299,6 +322,12 @@ html {
   .footer-sticky-wrapper {
     position: sticky;
     bottom: 0;
+    z-index: 0;
+  }
+  /* The content above needs a higher z-index so it scrolls over the footer */
+  .footer-sticky-wrapper ~ * {
+    position: relative;
+    z-index: 1;
   }
 }
 

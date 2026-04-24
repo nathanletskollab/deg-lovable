@@ -1,7 +1,6 @@
 import { forwardRef, useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { X, MessageCircle } from 'lucide-react'
 import headerLogo from '@/assets/logo-white.svg'
 import iconStart from '@/assets/Layer 39.svg'
 import iconCare from '@/assets/Layer 1.svg'
@@ -29,7 +28,7 @@ const NAV_SECTIONS = [
     label: 'About the Practice',
     icon: iconPractice,
     links: [
-      { text: 'About Dr. Erica', href: '#about' },
+      { text: 'About Dr. Erica', href: '/about' },
       { text: 'Our Approach to Care', href: '#approach' },
       { text: 'FAQ', href: '#faq' },
       { text: 'Care Team', href: '#about' },
@@ -52,6 +51,93 @@ const NAV_SECTIONS = [
   },
 ]
 
+type VisualTab = 'start' | 'return' | null
+
+// Shared toggle pill — rendered twice (mobile center + desktop right) to avoid layout conflicts
+function TogglePill({
+  visualTab,
+  isDark,
+  isCarePage,
+  handleTabClick,
+  layoutPrefix,
+  size = 'md',
+}: {
+  visualTab: VisualTab
+  isDark: boolean
+  isCarePage: boolean
+  handleTabClick: (tab: 'start' | 'return', path: string) => void
+  layoutPrefix: string
+  size?: 'sm' | 'md'
+}) {
+  const [hoveredBtn, setHoveredBtn] = useState<'start' | 'return' | null>(null)
+  const btnClass = size === 'sm'
+    ? 'relative h-8 px-3 rounded-full font-sans text-[11px] font-medium tracking-wide transition-all duration-200'
+    : 'relative h-7 px-3 sm:h-8 sm:px-4 rounded-full font-sans text-[11px] sm:text-xs font-medium tracking-wide transition-all duration-200'
+
+  const getButtonStyle = (tab: 'start' | 'return') => {
+    const isSelected = visualTab === tab
+    const isHovered = hoveredBtn === tab && !isSelected
+    return {
+      color: isSelected
+        ? 'hsl(var(--primary-foreground))'
+        : isDark ? 'hsl(var(--foreground) / 0.65)' : 'rgba(255,255,255,0.75)',
+      background: isHovered
+        ? isDark ? 'hsl(var(--foreground) / 0.1)' : 'rgba(255,255,255,0.18)'
+        : 'transparent',
+    }
+  }
+
+  return (
+    <div
+      className="inline-flex p-1 rounded-full"
+      style={{
+        background: isDark ? 'hsl(var(--foreground) / 0.07)' : 'rgba(255,255,255,0.18)',
+        border: isDark ? '1px solid hsl(var(--foreground) / 0.12)' : '1px solid rgba(255,255,255,0.3)',
+        backdropFilter: 'blur(8px)',
+      }}
+      role="group"
+      aria-label="Choose care type"
+    >
+      <button
+        onClick={() => handleTabClick('start', '/start-your-care')}
+        onMouseEnter={() => setHoveredBtn('start')}
+        onMouseLeave={() => setHoveredBtn(null)}
+        className={btnClass}
+        style={getButtonStyle('start')}
+        aria-current={isCarePage && visualTab === 'start' ? 'page' : undefined}
+      >
+        {visualTab === 'start' && (
+          <motion.div
+            layoutId={`${layoutPrefix}-pill`}
+            className="absolute inset-0 rounded-full"
+            style={{ background: 'hsl(var(--primary))' }}
+            transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+          />
+        )}
+        <span className="relative z-10">First time</span>
+      </button>
+      <button
+        onClick={() => handleTabClick('return', '/continue-your-care')}
+        onMouseEnter={() => setHoveredBtn('return')}
+        onMouseLeave={() => setHoveredBtn(null)}
+        className={btnClass}
+        style={getButtonStyle('return')}
+        aria-current={isCarePage && visualTab === 'return' ? 'page' : undefined}
+      >
+        {visualTab === 'return' && (
+          <motion.div
+            layoutId={`${layoutPrefix}-pill`}
+            className="absolute inset-0 rounded-full"
+            style={{ background: 'hsl(var(--primary))' }}
+            transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+          />
+        )}
+        <span className="relative z-10">Returning</span>
+      </button>
+    </div>
+  )
+}
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [isDark, setIsDark] = useState(false)
@@ -61,7 +147,21 @@ const Navbar = () => {
   const navigate = useNavigate()
 
   const isCarePage = location.pathname === '/start-your-care' || location.pathname === '/continue-your-care'
-  const isStartPage = location.pathname === '/start-your-care'
+  // On care pages show the selected tab; on all other pages no tab is pre-selected
+  const [visualTab, setVisualTab] = useState<VisualTab>(
+    location.pathname === '/continue-your-care' ? 'return' :
+    location.pathname === '/start-your-care' ? 'start' : null
+  )
+
+  // Split-screen theme: logo tracks left side, toggle/hamburger track right side
+  const [isLeftDark, setIsLeftDark] = useState(false)
+  const [isRightDark, setIsRightDark] = useState(false)
+
+  const handleTabClick = (tab: 'start' | 'return', path: string) => {
+    if (visualTab === tab) return
+    setVisualTab(tab)
+    setTimeout(() => navigate(path), 260)
+  }
 
   useEffect(() => {
     let frame = 0
@@ -83,12 +183,21 @@ const Navbar = () => {
       if (!nav) return
       const rect = nav.getBoundingClientRect()
       const sampleY = Math.min(window.innerHeight - 1, rect.top + rect.height / 2)
-      const samplePoints = [window.innerWidth * 0.25, window.innerWidth * 0.5, window.innerWidth * 0.75]
-      const themes = samplePoints.map((x) =>
-        getThemeAtPoint(Math.max(0, Math.min(window.innerWidth - 1, x)), sampleY)
-      )
-      const darkVotes = themes.filter((theme) => theme === 'dark').length
-      setIsDark(darkVotes > themes.length / 2)
+      const clamp = (x: number) => Math.max(0, Math.min(window.innerWidth - 1, x))
+
+      // Left side: sample two points near the logo
+      const leftThemes = [0.08, 0.18].map(f => getThemeAtPoint(clamp(window.innerWidth * f), sampleY))
+      const leftDarkVotes = leftThemes.filter(t => t === 'dark').length
+      setIsLeftDark(leftDarkVotes > leftThemes.length / 2)
+
+      // Right side: sample two points near the toggle/hamburger
+      const rightThemes = [0.72, 0.88].map(f => getThemeAtPoint(clamp(window.innerWidth * f), sampleY))
+      const rightDarkVotes = rightThemes.filter(t => t === 'dark').length
+      setIsRightDark(rightDarkVotes > rightThemes.length / 2)
+
+      // Overall dark = majority of all four sample points (used for nav background)
+      const allVotes = leftDarkVotes + rightDarkVotes
+      setIsDark(allVotes > 2)
       setIsPastHero(window.scrollY > window.innerHeight * 0.82)
     }
 
@@ -119,20 +228,25 @@ const Navbar = () => {
     }
   }, [isOpen])
 
-  const textClass = isDark ? 'text-foreground/90' : 'text-white/90'
-  const borderClass = isDark ? 'border-foreground/20' : 'border-white/20'
-  const iconClass = isDark ? 'text-foreground/80' : 'text-white/80'
-  const hoverBg = isDark ? 'hover:bg-foreground/10' : 'hover:bg-white/10'
+  // Right-side classes (toggle, hamburger)
+  const iconClass = isRightDark ? 'text-foreground/80' : 'text-white/80'
 
   const closeMenu = () => setIsOpen(false)
+
+  const toggleProps = { visualTab, isDark: isRightDark, isCarePage, handleTabClick }
 
   return (
     <>
       <nav ref={navRef} className="fixed top-4 left-4 right-4 z-50 flex justify-center">
+        {/*
+          Mobile:  3-col grid  [monogram | toggle (center) | hamburger]
+          Desktop: flex row    [wordmark  ………………  toggle | hamburger]
+        */}
         <div
-          className="flex items-center justify-between w-full max-w-[1400px] transition-all duration-500"
+          className="w-full max-w-[1400px] transition-all duration-500 items-center px-4 py-3 sm:px-10 sm:py-4
+                     grid grid-cols-[auto_1fr_auto]
+                     sm:flex sm:justify-between"
           style={{
-            padding: '16px 40px',
             borderRadius: '58px',
             background: isPastHero
               ? isDark
@@ -146,74 +260,43 @@ const Navbar = () => {
             WebkitBackdropFilter: isPastHero ? 'blur(20px)' : 'none',
           }}
         >
-          <a href="/" className="flex-shrink-0">
+          {/* Mobile: serif "E" monogram — compact, elegant, leaves room for the toggle */}
+          <a href="/" className="flex-shrink-0 z-10 sm:hidden" aria-label="Dr. Erica, ND">
+            <span
+              style={{
+                fontFamily: 'Cormorant Garamond, Georgia, serif',
+                fontSize: '22px',
+                fontWeight: 400,
+                letterSpacing: '0.08em',
+                color: isLeftDark ? 'hsl(var(--foreground) / 0.9)' : 'rgba(255,255,255,0.9)',
+                lineHeight: 1,
+                transition: 'color 0.5s',
+              }}
+            >
+              E
+            </span>
+          </a>
+
+          {/* Desktop: full wordmark */}
+          <a href="/" className="flex-shrink-0 z-10 hidden sm:block">
             <img
               src={headerLogo}
               alt="Dr. Erica, ND"
-              className={`w-auto transition-all duration-500 ${isDark ? 'brightness-0' : ''} ${isCarePage ? 'h-[16px] md:h-[20px]' : 'h-[22px] md:h-7'}`}
+              className={`w-auto h-[16px] md:h-[20px] transition-all duration-500 ${isLeftDark ? 'brightness-0' : ''}`}
             />
           </a>
 
-          <div className="flex items-center gap-2 sm:gap-3">
-            {/* Care pages: always-visible toggle pill — shown on all screen sizes */}
-            {isCarePage ? (
-              <div
-                className="inline-flex p-1 rounded-full"
-                style={{
-                  background: isDark ? 'hsl(var(--foreground) / 0.07)' : 'rgba(255,255,255,0.18)',
-                  border: isDark ? '1px solid hsl(var(--foreground) / 0.12)' : '1px solid rgba(255,255,255,0.3)',
-                  backdropFilter: 'blur(8px)',
-                }}
-                role="group"
-                aria-label="Choose care type"
-              >
-                <button
-                  onClick={() => navigate('/start-your-care')}
-                  className="h-7 px-3 sm:h-8 sm:px-4 rounded-full font-sans text-[11px] sm:text-xs font-medium tracking-wide"
-                  style={
-                    isStartPage
-                      ? { background: 'hsl(var(--primary))', color: 'hsl(var(--primary-foreground))' }
-                      : { background: 'transparent', color: isDark ? 'hsl(var(--foreground) / 0.6)' : 'rgba(255,255,255,0.7)' }
-                  }
-                  aria-current={isStartPage ? 'page' : undefined}
-                >
-                  First time
-                </button>
-                <button
-                  onClick={() => navigate('/continue-your-care')}
-                  className="h-7 px-3 sm:h-8 sm:px-4 rounded-full font-sans text-[11px] sm:text-xs font-medium tracking-wide"
-                  style={
-                    !isStartPage
-                      ? { background: 'hsl(var(--primary))', color: 'hsl(var(--primary-foreground))' }
-                      : { background: 'transparent', color: isDark ? 'hsl(var(--foreground) / 0.6)' : 'rgba(255,255,255,0.7)' }
-                  }
-                  aria-current={!isStartPage ? 'page' : undefined}
-                >
-                  Returning
-                </button>
-              </div>
-            ) : isPastHero ? (
-              <>
-                <a
-                  href="/start-your-care"
-                  className={`hidden lg:inline-flex items-center gap-2 h-10 px-6 rounded-full border ${borderClass} text-sm leading-none font-sans font-medium tracking-wide ${textClass} ${hoverBg} transition-all duration-500`}
-                >
-                  Start Your Care
-                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" className="ml-0.5">
-                    <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </a>
-                <a
-                  href="/continue-your-care"
-                  className={`hidden lg:inline-flex items-center gap-2 h-10 px-6 rounded-full border ${borderClass} text-sm leading-none font-sans font-medium tracking-wide ${textClass} ${hoverBg} transition-all duration-500`}
-                >
-                  Continue Your Care
-                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" className="ml-0.5">
-                    <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </a>
-              </>
-            ) : null}
+          {/* Mobile center: toggle always visible — it's the primary nav action */}
+          <div className="flex justify-center sm:hidden">
+            <TogglePill {...toggleProps} layoutPrefix="mob" size="sm" />
+          </div>
+
+          {/* Right group */}
+          <div className="flex items-center justify-end gap-2 sm:gap-3 z-10">
+            {/* Desktop toggle — global, replaces the two separate CTA links */}
+            <div className="hidden sm:block">
+              <TogglePill {...toggleProps} layoutPrefix="desk" size="md" />
+            </div>
 
             <button
               onClick={() => setIsOpen(!isOpen)}
@@ -250,14 +333,20 @@ const Navbar = () => {
               onClick={closeMenu}
             />
 
-            {/* Mobile panel — slides up from bottom */}
+            {/* Mobile panel — slides up from bottom with top corner radius */}
             <motion.div
-              initial={{ y: '100%', x: 0 }}
-              animate={{ y: 0, x: 0 }}
-              exit={{ y: '100%', x: 0 }}
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
               transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
-              className="fixed inset-0 z-[70] sm:hidden flex flex-col"
-              style={{ background: 'hsl(var(--background))' }}
+              className="fixed bottom-0 left-0 right-0 z-[70] sm:hidden flex flex-col"
+              style={{
+                background: 'hsl(var(--background))',
+                height: 'calc(100dvh - 20px)',
+                borderTopLeftRadius: '28px',
+                borderTopRightRadius: '28px',
+                boxShadow: '0 -8px 40px rgba(0,0,0,0.12)',
+              }}
             >
               <PanelContent closeMenu={closeMenu} />
             </motion.div>
@@ -290,7 +379,7 @@ const PanelContent = forwardRef<HTMLDivElement, { closeMenu: () => void }>(funct
           className="p-2 text-foreground/50 hover:text-foreground transition-colors"
           aria-label="Close menu"
         >
-          <X size={22} strokeWidth={1.5} />
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
       </div>
 
@@ -301,7 +390,7 @@ const PanelContent = forwardRef<HTMLDivElement, { closeMenu: () => void }>(funct
               {section.icon ? (
                 <img src={section.icon} alt="" aria-hidden className="w-[18px] h-[18px] opacity-35" />
               ) : (
-                <MessageCircle aria-hidden className="w-[18px] h-[18px] text-foreground/35" strokeWidth={1.5} />
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="w-[18px] h-[18px] text-foreground/35"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
               )}
               <span className="font-sans uppercase tracking-[0.18em] text-foreground/40 text-xs">
                 {section.label}
@@ -323,7 +412,7 @@ const PanelContent = forwardRef<HTMLDivElement, { closeMenu: () => void }>(funct
         ))}
       </div>
 
-      <div className="px-8 pb-5 sm:pb-8 pt-3 sm:pt-4 space-y-2.5 sm:space-y-3">
+      <div className="px-8 pb-8 sm:pb-8 pt-3 sm:pt-4 space-y-2.5 sm:space-y-3">
         <a
           href="/start-your-care"
           onClick={closeMenu}

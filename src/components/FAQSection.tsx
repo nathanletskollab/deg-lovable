@@ -73,7 +73,7 @@ const FAQSection = () => {
                     aria-expanded={isOpen}
                     aria-controls={`faq-answer-${i}`}
                   >
-                    <span className="font-sans font-medium text-foreground pr-4 leading-[1.4] text-base">
+                    <span className="type-body font-medium text-foreground pr-4 leading-[1.5]">
                       {faq.q}
                     </span>
                     <span
@@ -94,7 +94,7 @@ const FAQSection = () => {
                       opacity: isOpen ? 1 : 0,
                     }}
                   >
-                    <p className="px-4 md:px-6 pb-4 md:pb-5 pt-0 font-sans text-base leading-[1.6] text-foreground/75">
+                    <p className="px-4 md:px-6 pb-4 md:pb-5 pt-0 type-body leading-[1.6] text-foreground/75">
                       {faq.a}
                     </p>
                   </div>
