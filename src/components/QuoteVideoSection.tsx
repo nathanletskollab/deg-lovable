@@ -1,11 +1,48 @@
 import { motion } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
 import section2Bg from '@/assets/section2-bg.png?format=webp&as=url'
 import beachVideo from '@/assets/beach-video.mp4'
 import beachPoster from '@/assets/beach-poster.jpg'
 
 const QuoteVideoSection = () => {
+  const sectionRef = useRef<HTMLElement>(null)
+  const [shouldLoadVideo, setShouldLoadVideo] = useState(false)
+  const [isVideoReady, setIsVideoReady] = useState(false)
+
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section || shouldLoadVideo) return
+
+    let observer: IntersectionObserver | null = null
+    const timeout = window.setTimeout(() => {
+      if (!('IntersectionObserver' in window)) {
+        setShouldLoadVideo(true)
+        return
+      }
+
+      const nextObserver = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setShouldLoadVideo(true)
+            nextObserver.disconnect()
+          }
+        },
+        { rootMargin: '700px 0px' }
+      )
+
+      observer = nextObserver
+      observer.observe(section)
+    }, 600)
+
+    return () => {
+      window.clearTimeout(timeout)
+      observer?.disconnect()
+    }
+  }, [shouldLoadVideo])
+
   return (
     <section
+      ref={sectionRef}
       data-navbar-theme="light"
       className="section-layer relative z-[4]"
       style={{ background: 'hsl(var(--primary))' }}
@@ -77,28 +114,37 @@ const QuoteVideoSection = () => {
           style={{ backgroundColor: 'hsl(var(--background))' }}
         />
 
-        {/* Video — floats above the bridge */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="relative z-[1] w-full max-w-[1320px] mx-auto"
-        >
-          <div className="rounded-2xl overflow-hidden shadow-2xl">
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
-              preload="metadata"
-              poster={beachPoster}
-              className="w-full h-auto object-cover aspect-video"
-            >
-              <source src={beachVideo} type="video/mp4" />
-            </video>
+        {/* Video — poster-backed to avoid a blank or jumpy load frame */}
+        <div className="relative z-[1] w-full max-w-[1320px] mx-auto">
+          <div
+            className="relative rounded-2xl overflow-hidden bg-cover bg-center"
+            style={{
+              aspectRatio: '16 / 9',
+              backgroundImage: `url(${beachPoster})`,
+              transform: 'translateZ(0)',
+              contain: 'paint',
+            }}
+          >
+            {shouldLoadVideo && (
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="metadata"
+                poster={beachPoster}
+                onCanPlay={() => setIsVideoReady(true)}
+                className="absolute inset-0 w-full h-full object-cover"
+                style={{
+                  opacity: isVideoReady ? 1 : 0,
+                  transition: 'opacity 700ms cubic-bezier(0.22, 1, 0.36, 1)',
+                }}
+              >
+                <source src={beachVideo} type="video/mp4" />
+              </video>
+            )}
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   )

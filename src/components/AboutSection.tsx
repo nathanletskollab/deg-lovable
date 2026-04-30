@@ -67,7 +67,7 @@ const AboutSection = () => {
 
             <a
               href="#approach"
-              className="inline-flex items-center gap-2 h-10 mt-10 px-6 rounded-full font-sans text-sm leading-none font-medium tracking-wide transition-colors"
+              className="brand-button-motion inline-flex items-center gap-2 h-10 mt-10 px-6 rounded-full font-sans text-sm leading-none font-medium tracking-wide"
               style={{ background: 'hsl(var(--primary))', color: 'hsl(var(--primary-foreground))' }}
             >
               Read Erica's Story & Philosophy

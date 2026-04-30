@@ -52,7 +52,14 @@ const BeyondSection = () => {
           <h2 className="type-display mb-4" style={{ color: '#ffffff' }}>
             Beyond the clinic
           </h2>
-          <p className="type-serif-lead max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.7)', fontSize: 'clamp(1.25rem, 2vw, 1.625rem)' }}>
+          <p
+            className="type-body max-w-2xl mx-auto"
+            style={{
+              color: 'rgba(255,255,255,0.7)',
+              fontSize: 'clamp(1rem, 1.15vw, 1.125rem)',
+              lineHeight: 1.65,
+            }}
+          >
             My practice flows into how I live, parent, and create. Beyond the clinic, these projects are extensions of my mission — each built to share, teach, and support in new ways.
           </p>
         </motion.div>
@@ -73,7 +80,7 @@ const BeyondSection = () => {
             >
               {/* Left: Brand image */}
               <div
-                className="md:w-1/2 aspect-square relative overflow-hidden"
+                className="md:w-1/2 aspect-[4/3] md:aspect-auto md:min-h-[clamp(380px,42vw,560px)] relative overflow-hidden"
                 style={{ background: 'hsl(var(--primary))' }}
               >
                 <img
@@ -85,12 +92,19 @@ const BeyondSection = () => {
                   loading="lazy"
                 />
               </div>
-              {/* Right: Text — square only on desktop (where it sits beside the image) */}
+              {/* Right: Text */}
               <div
-                className="md:w-1/2 md:aspect-square p-8 md:p-12 flex flex-col justify-center"
+                className="md:w-1/2 md:min-h-[clamp(380px,42vw,560px)] p-8 md:p-12 flex flex-col justify-center"
                 style={{ background: 'hsl(var(--surface-warm))' }}
               >
-                <h3 className="type-h1 mb-2" style={{ color: 'hsl(var(--foreground))' }}>
+                <h3
+                  className="type-h1 mb-2"
+                  style={{
+                    color: 'hsl(var(--foreground))',
+                    fontSize: 'clamp(2.125rem, 3.1vw, 3.35rem)',
+                    lineHeight: 1.02,
+                  }}
+                >
                   Wellness Library
                 </h3>
                 <p className="type-eyebrow mb-5" style={{ color: 'hsl(var(--foreground))' }}>
@@ -104,7 +118,7 @@ const BeyondSection = () => {
                 </p>
                 <a
                   href="#"
-                  className="inline-flex items-center justify-center gap-2 h-10 w-full md:w-auto md:self-start rounded-full px-6 font-sans text-sm leading-none font-medium tracking-wide transition-colors"
+                  className="brand-button-motion inline-flex items-center justify-center gap-2 h-10 w-full md:w-auto md:self-start rounded-full px-6 font-sans text-sm leading-none font-medium tracking-wide"
                   style={{ border: '1px solid rgba(36,35,33,0.3)', color: 'hsl(var(--foreground))' }}
                 >
                   Explore the Wellness Library
@@ -125,7 +139,7 @@ const BeyondSection = () => {
             >
               {/* Left: Brand image */}
               <div
-                className="md:w-1/2 aspect-square relative overflow-hidden"
+                className="md:w-1/2 aspect-[4/3] md:aspect-auto md:min-h-[clamp(380px,42vw,560px)] relative overflow-hidden"
                 style={{ background: 'hsl(var(--secondary))' }}
               >
                 <img
@@ -137,12 +151,19 @@ const BeyondSection = () => {
                   loading="lazy"
                 />
               </div>
-              {/* Right: Text — square only on desktop */}
+              {/* Right: Text */}
               <div
-                className="md:w-1/2 md:aspect-square p-8 md:p-12 flex flex-col justify-center"
+                className="md:w-1/2 md:min-h-[clamp(380px,42vw,560px)] p-8 md:p-12 flex flex-col justify-center"
                 style={{ background: 'hsl(var(--surface-warm))' }}
               >
-                <h3 className="type-h1 mb-2" style={{ color: 'hsl(var(--foreground))' }}>
+                <h3
+                  className="type-h1 mb-2"
+                  style={{
+                    color: 'hsl(var(--foreground))',
+                    fontSize: 'clamp(2.125rem, 3.1vw, 3.35rem)',
+                    lineHeight: 1.02,
+                  }}
+                >
                   Earth Spirit Medicine
                 </h3>
                 <p className="type-eyebrow mb-5" style={{ color: 'hsl(var(--foreground))' }}>
@@ -153,7 +174,7 @@ const BeyondSection = () => {
                 </p>
                 <a
                   href="http://www.earthspiritmedicine.ca/"
-                  className="inline-flex items-center justify-center gap-2 h-10 w-full md:w-auto md:self-start rounded-full px-6 font-sans text-sm leading-none font-medium tracking-wide transition-colors"
+                  className="brand-button-motion inline-flex items-center justify-center gap-2 h-10 w-full md:w-auto md:self-start rounded-full px-6 font-sans text-sm leading-none font-medium tracking-wide"
                   style={{ border: '1px solid rgba(36,35,33,0.3)', color: 'hsl(var(--foreground))' }}
                   target="_blank"
                   rel="noopener noreferrer"

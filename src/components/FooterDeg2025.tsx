@@ -1,4 +1,5 @@
 import './FooterDeg2025.css'
+import { useEffect, useRef, useState } from 'react'
 import logoImage from '@/assets/footer/eg-logo-stacked.png'
 import iconStart from '@/assets/Layer 39.svg'
 import iconCare from '@/assets/Layer 1.svg'
@@ -48,21 +49,62 @@ const menuColumns = [
 ]
 
 export default function FooterDeg2025() {
+  const footerRef = useRef<HTMLElement>(null)
+  const [shouldLoadVideo, setShouldLoadVideo] = useState(false)
+  const [isVideoReady, setIsVideoReady] = useState(false)
+
+  useEffect(() => {
+    const footer = footerRef.current
+    if (!footer || shouldLoadVideo) return
+
+    let observer: IntersectionObserver | null = null
+    const timeout = window.setTimeout(() => {
+      if (!('IntersectionObserver' in window)) {
+        setShouldLoadVideo(true)
+        return
+      }
+
+      const nextObserver = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setShouldLoadVideo(true)
+            nextObserver.disconnect()
+          }
+        },
+        { rootMargin: '900px 0px' }
+      )
+
+      observer = nextObserver
+      observer.observe(footer)
+    }, 1200)
+
+    return () => {
+      window.clearTimeout(timeout)
+      observer?.disconnect()
+    }
+  }, [shouldLoadVideo])
+
   return (
-    <main data-navbar-theme="dark" className="footer-page relative" style={{ zIndex: 0 }}>
+    <main ref={footerRef} data-navbar-theme="dark" className="footer-page relative" style={{ zIndex: 0 }}>
 
       {/* Video background */}
       <div className="footer-video-bg">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          poster={beachPoster}
-          className="footer-video"
-        >
-          <source src={beachVideo} type="video/mp4" />
-        </video>
+        <img src={beachPoster} alt="" aria-hidden className="footer-poster" />
+        {shouldLoadVideo && (
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            poster={beachPoster}
+            className="footer-video"
+            onCanPlay={() => setIsVideoReady(true)}
+            style={{ opacity: isVideoReady ? 1 : 0 }}
+          >
+            <source src={beachVideo} type="video/mp4" />
+          </video>
+        )}
         <div className="footer-video-overlay" />
       </div>
 
@@ -98,10 +140,10 @@ export default function FooterDeg2025() {
           <h1>Not sure where to start?</h1>
           <p className="text-base">Begin with Dr. Erica — we will guide you.</p>
           <div className="cta-actions">
-            <a href="/start-your-care" className="primary-btn" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', borderRadius: '58px', height: '40px', padding: '0 24px', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500, letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>
+            <a href="/start-your-care" className="primary-btn brand-button-motion" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', borderRadius: '58px', height: '40px', padding: '0 24px', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500, letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>
               Start with Dr. Erica <img src={arrowRightLight} alt="" aria-hidden />
             </a>
-            <a href="#connect" className="secondary-btn" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', borderRadius: '58px', height: '40px', padding: '0 24px', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500, letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>
+            <a href="#connect" className="secondary-btn brand-button-motion" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', borderRadius: '58px', height: '40px', padding: '0 24px', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500, letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>
               Ask a Question <img src={arrowRightLight} alt="" aria-hidden />
             </a>
           </div>

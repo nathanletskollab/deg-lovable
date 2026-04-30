@@ -61,6 +61,7 @@ function TogglePill({
   handleTabClick,
   layoutPrefix,
   size = 'md',
+  showChrome = true,
 }: {
   visualTab: VisualTab
   isDark: boolean
@@ -68,6 +69,7 @@ function TogglePill({
   handleTabClick: (tab: 'start' | 'return', path: string) => void
   layoutPrefix: string
   size?: 'sm' | 'md'
+  showChrome?: boolean
 }) {
   const [hoveredBtn, setHoveredBtn] = useState<'start' | 'return' | null>(null)
   const btnClass = size === 'sm'
@@ -91,9 +93,13 @@ function TogglePill({
     <div
       className="inline-flex p-1 rounded-full"
       style={{
-        background: isDark ? 'hsl(var(--foreground) / 0.07)' : 'rgba(255,255,255,0.18)',
-        border: isDark ? '1px solid hsl(var(--foreground) / 0.12)' : '1px solid rgba(255,255,255,0.3)',
-        backdropFilter: 'blur(8px)',
+        background: showChrome
+          ? isDark ? 'hsl(var(--foreground) / 0.07)' : 'rgba(255,255,255,0.18)'
+          : 'transparent',
+        border: showChrome
+          ? isDark ? '1px solid hsl(var(--foreground) / 0.12)' : '1px solid rgba(255,255,255,0.3)'
+          : '1px solid transparent',
+        backdropFilter: showChrome ? 'blur(8px)' : 'none',
       }}
       role="group"
       aria-label="Choose care type"
@@ -143,6 +149,12 @@ const Navbar = () => {
   const [isDark, setIsDark] = useState(false)
   const [isPastHero, setIsPastHero] = useState(false)
   const navRef = useRef<HTMLElement>(null)
+  const themeStateRef = useRef({
+    isLeftDark: false,
+    isRightDark: false,
+    isDark: false,
+    isPastHero: false,
+  })
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -188,17 +200,37 @@ const Navbar = () => {
       // Left side: sample two points near the logo
       const leftThemes = [0.08, 0.18].map(f => getThemeAtPoint(clamp(window.innerWidth * f), sampleY))
       const leftDarkVotes = leftThemes.filter(t => t === 'dark').length
-      setIsLeftDark(leftDarkVotes > leftThemes.length / 2)
+      const nextLeftDark = leftDarkVotes > leftThemes.length / 2
 
       // Right side: sample two points near the toggle/hamburger
       const rightThemes = [0.72, 0.88].map(f => getThemeAtPoint(clamp(window.innerWidth * f), sampleY))
       const rightDarkVotes = rightThemes.filter(t => t === 'dark').length
-      setIsRightDark(rightDarkVotes > rightThemes.length / 2)
+      const nextRightDark = rightDarkVotes > rightThemes.length / 2
 
       // Overall dark = majority of all four sample points (used for nav background)
       const allVotes = leftDarkVotes + rightDarkVotes
-      setIsDark(allVotes > 2)
-      setIsPastHero(window.scrollY > window.innerHeight * 0.82)
+      const nextDark = allVotes > 2
+
+      // Hysteresis prevents rapid on/off toggles around the hero boundary.
+      const pastHeroExit = window.innerHeight * 0.74
+      const pastHeroEnter = window.innerHeight * 0.88
+      const currentPastHero = themeStateRef.current.isPastHero
+      const nextPastHero = currentPastHero
+        ? window.scrollY > pastHeroExit
+        : window.scrollY > pastHeroEnter
+
+      const current = themeStateRef.current
+      if (current.isLeftDark !== nextLeftDark) setIsLeftDark(nextLeftDark)
+      if (current.isRightDark !== nextRightDark) setIsRightDark(nextRightDark)
+      if (current.isDark !== nextDark) setIsDark(nextDark)
+      if (current.isPastHero !== nextPastHero) setIsPastHero(nextPastHero)
+
+      themeStateRef.current = {
+        isLeftDark: nextLeftDark,
+        isRightDark: nextRightDark,
+        isDark: nextDark,
+        isPastHero: nextPastHero,
+      }
     }
 
     const requestUpdate = () => {
@@ -233,7 +265,7 @@ const Navbar = () => {
 
   const closeMenu = () => setIsOpen(false)
 
-  const toggleProps = { visualTab, isDark: isRightDark, isCarePage, handleTabClick }
+  const toggleProps = { visualTab, isDark: isRightDark, isCarePage, handleTabClick, showChrome: isPastHero || isCarePage }
 
   return (
     <>
@@ -416,7 +448,7 @@ const PanelContent = forwardRef<HTMLDivElement, { closeMenu: () => void }>(funct
         <a
           href="/start-your-care"
           onClick={closeMenu}
-          className="flex items-center justify-center gap-2 h-10 w-full px-6 rounded-full bg-primary text-primary-foreground text-sm leading-none font-sans font-medium tracking-wide hover:bg-primary/90 transition-colors"
+          className="brand-button-motion flex items-center justify-center gap-2 h-10 w-full px-6 rounded-full bg-primary text-primary-foreground text-sm leading-none font-sans font-medium tracking-wide hover:bg-primary/90"
         >
           Start Your Care
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
@@ -426,7 +458,7 @@ const PanelContent = forwardRef<HTMLDivElement, { closeMenu: () => void }>(funct
         <a
           href="#connect"
           onClick={closeMenu}
-          className="flex items-center justify-center gap-2 h-10 w-full px-6 rounded-full border border-foreground/20 text-foreground/70 text-sm leading-none font-sans font-medium tracking-wide hover:bg-foreground/5 transition-colors"
+          className="brand-button-motion flex items-center justify-center gap-2 h-10 w-full px-6 rounded-full border border-foreground/20 text-foreground/70 text-sm leading-none font-sans font-medium tracking-wide hover:bg-foreground/5"
         >
           Ask a Question
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
