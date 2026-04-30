@@ -70,7 +70,7 @@ const BeyondSection = () => {
               motion.div inside handles animation — animated transforms must
               NOT be on the same element as overflow:hidden + border-radius
               or the GPU compositing layer breaks the clip. */}
-          <div style={{ borderRadius: 'var(--section-radius)', overflow: 'hidden', transform: 'translateZ(0)' }}>
+          <div data-navbar-theme="dark" style={{ borderRadius: 'var(--section-radius)', overflow: 'hidden', transform: 'translateZ(0)' }}>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -129,7 +129,7 @@ const BeyondSection = () => {
           </div>
 
           {/* Earth Spirit Medicine Card */}
-          <div style={{ borderRadius: 'var(--section-radius)', overflow: 'hidden', transform: 'translateZ(0)' }}>
+          <div data-navbar-theme="dark" style={{ borderRadius: 'var(--section-radius)', overflow: 'hidden', transform: 'translateZ(0)' }}>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}

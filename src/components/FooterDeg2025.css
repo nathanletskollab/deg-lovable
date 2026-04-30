@@ -192,6 +192,11 @@
   border-color: rgba(255, 255, 255, 0.8);
 }
 
+.primary-btn img,
+.secondary-btn img {
+  filter: brightness(0) invert(1);
+}
+
 .secondary-btn {
   background: rgba(31, 57, 49, 0.55);
   border: 1px solid rgba(255, 255, 255, 0.2);

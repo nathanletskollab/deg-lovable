@@ -194,22 +194,31 @@ const Navbar = () => {
       const nav = navRef.current
       if (!nav) return
       const rect = nav.getBoundingClientRect()
-      const sampleY = Math.min(window.innerHeight - 1, rect.top + rect.height / 2)
       const clamp = (x: number) => Math.max(0, Math.min(window.innerWidth - 1, x))
+      const clampY = (y: number) => Math.max(0, Math.min(window.innerHeight - 1, y))
+      const sampleRows = [
+        clampY(rect.top + rect.height * 0.35),
+        clampY(rect.top + rect.height * 0.65),
+        clampY(rect.bottom + 12),
+      ]
 
-      // Left side: sample two points near the logo
-      const leftThemes = [0.08, 0.18].map(f => getThemeAtPoint(clamp(window.innerWidth * f), sampleY))
+      const sampleThemes = (xFactors: number[]) =>
+        xFactors.flatMap(xFactor =>
+          sampleRows.map(y => getThemeAtPoint(clamp(window.innerWidth * xFactor), y))
+        )
+
+      // Sample multiple points so a light card inside a dark section can still flip the nav.
+      const leftThemes = sampleThemes([0.08, 0.18])
       const leftDarkVotes = leftThemes.filter(t => t === 'dark').length
-      const nextLeftDark = leftDarkVotes > leftThemes.length / 2
+      const nextLeftDark = leftDarkVotes > 0
 
-      // Right side: sample two points near the toggle/hamburger
-      const rightThemes = [0.72, 0.88].map(f => getThemeAtPoint(clamp(window.innerWidth * f), sampleY))
+      const rightThemes = sampleThemes([0.72, 0.88])
       const rightDarkVotes = rightThemes.filter(t => t === 'dark').length
-      const nextRightDark = rightDarkVotes > rightThemes.length / 2
+      const nextRightDark = rightDarkVotes > 0
 
-      // Overall dark = majority of all four sample points (used for nav background)
+      // Overall dark = any side detects a dark-text surface (used for nav background)
       const allVotes = leftDarkVotes + rightDarkVotes
-      const nextDark = allVotes > 2
+      const nextDark = allVotes > 0
 
       // Hysteresis prevents rapid on/off toggles around the hero boundary.
       const pastHeroExit = window.innerHeight * 0.74
